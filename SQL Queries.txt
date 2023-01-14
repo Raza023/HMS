@@ -153,7 +153,7 @@ TRUNC(SYSDATE,'YEAR')
 46)SELECT TANH(60) "HYPERBOLIC TANGENT" FROM DUAL;  //1
 47)SELECT ASIN(0.3) "ARC SINE" FROM DUAL;           //0.30469265401.....
 48)SELECT ACOS(0.3) "ARC COSINE" FROM DUAL;         //1.26610367277.....
-49)SELECT ATAN(0.3) "ARC TANGENT" FROM DUAL;        //0.29145679447.....              --GAND MARA HAHAHAA
+49)SELECT ATAN(0.3) "ARC TANGENT" FROM DUAL;        //0.29145679447.....   
 50)SELECT SYSDATE FROM DUAL;                        //10/22/2020
 51)SELECT ENAME, SYSDATE-HIREDATE DAYS FROM EMP WHERE DEPTNO=10;
    SELECT ENAME, (SYSDATE-HIREDATE)/7 WEEKS FROM EMP WHERE DEPTNO=10;
@@ -224,7 +224,7 @@ DECODE(TRUNC(SAL/1000, 0), 0, 0.00,
                            6, 0.44,
                               0.45
        ) 
-       TAX_RATE                                 --OKA
+       TAX_RATE                                 
 FROM EMP
 WHERE DEPTNO=30;
 19)
@@ -474,7 +474,7 @@ Q) To display employee King’s employee number, name, department number, and de
           //(+)LEFT and RIGHT OUTER JOIN(+);
 10)(error)SELECT E.EMPNO,E.ENAME,E.DEPTNO,D.LOC
    FROM EMP E, DEPT D
-   WHERE E.DEPTNO(+)=D.DEPTNO(+);     //CAN'T USE LEFT and RIGHT SIMULTANEOUSLY. InshaAllah
+   WHERE E.DEPTNO(+)=D.DEPTNO(+);     //CAN'T USE LEFT and RIGHT SIMULTANEOUSLY. 
 11)SELECT E.EMPNO,E.ENAME,E.DEPTNO,D.LOC
    FROM EMP E, DEPT D
    WHERE E.DEPTNO(+)=D.DEPTNO;
