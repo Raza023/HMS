@@ -194,7 +194,7 @@ TRUNC(SYSDATE,'YEAR')
 11)SELECT HIREDATE, TO_CHAR( NEXT_DAY( ADD_MONTHS(HIREDATE,6),'FRIDAY'),'Day, Month FMDdTH, YYYY') AS "DATE" FROM EMP;
 12)SELECT ENAME, SAL, COMM ,(SAL*12)+NVL(COMM,0) ANNSAL FROM EMP;                //NVL(E1,O) CHECK E1
 13)SELECT ENAME, SAL, COMM, (SAL*12)+NVL2(COMM,COMM,0) AS ANNSAL FROM EMP;       //NVL2(E1,E2,E3) CHECK E1
-14)SELECT ENAME, JOB, NULLIF(LENGTH(ENAME),LENGTH(JOB)) AS "NULLIF" FROM EMP;    // NULL(-) if true else LENGTH(ENAME) of first one
+14)SELECT ENAME, JOB, NULLIF(LENGTH(ENAME),LENGTH(JOB)) AS "NULLIF" FROM EMP;    //NULL(-) if both are same else first one LENGTH(ENAME) will be printed.
 15)SELECT ENAME, SAL, COMM, SAL+COMM, NULLIF(SAL,SAL+COMM) FROM EMP;
 16)
 SELECT ENAME, SAL, JOB,
@@ -602,18 +602,12 @@ WHERE E1.MGR=E2.EMPNO;
    );
 2) DESCRIBE DEPT;     //TO CHECK
 
-//DEFAULT OPTION
-3) CREATE TABLE TEST
-   (ID NUMBER(2),
-    VALUES NUMBER(2) DEFAULT 50,  //BY DEFAULT 50 WILL BE GIVEN AT THE TIME OF CREATION.  --COLUMN LEVEL
-    NAME VARCHAR(13));            //JUST LIKE A IN CMS
-
 //QUERYING DATA DICTIONARY 
-4) SELECT * FROM USER_TABLES;   //TABLE OWN BY USER
-5) SELECT DISTINCT OBJECT_TYPE FROM USER_OBJECTS;   //OBJECT TYPE BY USER(SYS)
-6) SELECT * FROM USER_CATALOG;   //VIEW TABLE, SYNONYMS, SEQUENCE BY USER(SYS)
-7) SELECT constraint_name, constraint_type, search_condition FROM user_constraints WHERE table_name = 'EMP';
-8) SELECT constraint_name, column_name FROM user_cons_columns WHERE table_name = 'EMP';
+3) SELECT * FROM USER_TABLES;   //TABLE OWN BY USER
+4) SELECT DISTINCT OBJECT_TYPE FROM USER_OBJECTS;   //OBJECT TYPE BY USER(SYS)
+5) SELECT * FROM USER_CATALOG;   //VIEW TABLE, SYNONYMS, SEQUENCE BY USER(SYS)
+6) SELECT constraint_name, constraint_type, search_condition FROM user_constraints WHERE table_name = 'EMP';
+7) SELECT constraint_name, column_name FROM user_cons_columns WHERE table_name = 'EMP';
    SELECT SEQUENCE_NAME,MIN_VALUE,MAX_VALUE,INCREMENT_BY,LAST_NUMBER FROM USER_SEQUENCES;
    DESCRIBE ALL_USERS;
    SELECT ic.index_name, ic.column_name,
@@ -622,17 +616,23 @@ WHERE E1.MGR=E2.EMPNO;
     WHERE ic.index_name = ix.index_name
     AND	  ic.table_name = 'EMP';
 
- 
+
 //CONSTRAINTS
 (1) COL LEVEL(C)
 (2) TABLE LEVEL(T)
 
 DEFAULT(C)          //MAAM KI SLIDES KA MUTABIK
 NOT NULL(C)
+CHECK (C,T)
 UNIQUE(C,T)
 PRIMARY KEY(C,T)
 FOREIGN KEY(C,T)
-CHECK (C)
+
+//DEFAULT OPTION
+6) CREATE TABLE TEST
+   (ID NUMBER(2),
+    VALUES NUMBER(2) DEFAULT 50,  //BY DEFAULT 50 WILL BE GIVEN AT THE TIME OF CREATION.  --COLUMN LEVEL
+    NAME VARCHAR(13));            //JUST LIKE A IN CMS
 
 
 7) CREATE TABLE EMP
@@ -706,6 +706,21 @@ CONSTRAINT DEPT_DNAME_UK UNIQUE(DNAME)
                    CONSTRAINT EMP_DEPTNO_CK CHECK(DEPTNO BETWEEN 10 AND 99)
 );
 
+//All in one
+CREATE TABLE HOUSE
+(
+	HID NUMBER(50),
+	HROOMS NUMBER(50) DEFAULT 5,
+	HNAME VARCHAR(50) NOT NULL,
+	ROOMHEIGHT NUMBER(50) //CHECK(ROOMHEIGHT BETWEEN 10 AND 20),
+	HMAILBOX VARCHAR2(10) //UNIQUE(HMAILBOX),
+	PID NUMBER(50),
+	CONSTRAINT house_roomheight_check CHECK(ROOMHEIGHT BETWEEN 10 AND 20),
+	CONSTRAINT HOUSE_HMAILBOX_UNIQUE UNIQUE(HMAILBOX),
+	CONSTRAINT HOUSE_HMAILBOX_PRIMARY PRIMARY KEY(HID),
+	CONSTRAINT HOUSE_HMAILBOX_FOREIGN FOREIGN KEY(PID) REFERNCES PERSON(PID)
+);
+
 
 ///////////////VIEWING CONSTRAINTS//////////////
 13)SELECT constraint_name, constraint_type,
@@ -729,7 +744,7 @@ CONSTRAINT DEPT_DNAME_UK UNIQUE(DNAME)
 ////////////////////////////////////////ALTER///////////////////////////////////////////////////
 
 ALTER TABLE EMPLOYEESIT19
-ADD (COMMISSION NUMBER(2,2) CHECK(COMMISSION > 0)); //COLUMN LEVEL CONSTRAINT CHECK WITH ADDING ATTRIBUTE.
+ADD (COMMISSION NUMBER(2,2) CHECK(COMMISSION > 0)); //COLUMN LEVEL CONSTRAINT CHECK AND ADDING ATTRIBUTE.
 
 ALTER TABLE EMPLOYEESIT19 
 ADD CONSTRAINT my_emp_id_pk PRIMARY KEY(ID);        //CONSTRAINT ADDED         
@@ -803,7 +818,8 @@ What are views?
 ->	Views represent a subset of the data contained in a table.
 ->	They can join and simplify multiple tables into one virtual table.
 ->	They take up very little storage space because the database contains only the view definition, not the data.
-->	They can provide results for different calculations (like sum and average) along with the stored data, and can limit the degree to which tables are exposed to the outer world.
+->	They can provide results for different calculations (like sum and average) along with the stored data,
+	and can limit the degree to which tables are exposed to the outer world.
 Why we use views?
 ->	Views are used to implement the security mechanism in SQL Server.
 ->	Views are generally used to restrict the user from viewing certain columns and rows. 
@@ -822,7 +838,7 @@ Retrieve data from view
 MODIFY VIEW (CREATE OR REPLACE AND ADD ALIAS TO EACH COLUMN)
 Insert, update, and delete data from view
 Alter the definition of a view
-Drop a view (DROP VIEW DEPT10;)
+Drop a view(DROP VIEW DEPT10;)
 
 ////////////////////////////////SIMPLE VIEW///////////////////////////////////
 //////////////////////////////////CREATE//////////////////////////////////////
